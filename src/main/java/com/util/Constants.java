@@ -10,5 +10,6 @@ public class Constants {
 	
 	//static public final String IMATHCLOUD_NEWSESSION_SERVICE = "iMathCloud/rest/beta/api/exec/newSession";
 	static public final String IMATHCLOUD_NEWSESSION_SERVICE = "iMathCloud/rest/session_service/newSession";
-
+	static public final String IMATHCLOUD_GETJOBS_SERVICE = "iMathCloud/rest/job_service/getJobs";
+	static public final String IMATHCLOUD_UPLOADFILE_SERVICE = "iMathCloud/rest/beta/api/data/upload";
 }
