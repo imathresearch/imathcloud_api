@@ -1,36 +1,48 @@
 package com.api;
 
+import com.util.AuthenticUser;
 import com.util.Constants;
-import com.util.MultipartUtility;
+import com.util.HttpGet;
+import com.util.HttpPost;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Authenticator;
-import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 
 
 public class iMathCloud {
 	
 
-
-	public static boolean requestSession(String userName){
+	public static boolean requestSession(AuthenticUser auser){
 		boolean success = false;
 		
-		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_NEWSESSION_SERVICE, userName);
+		List<String> param = new ArrayList<String> ();
+		param.add(auser.getuserName());
 		
-		HttpURLConnection conn;
+		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_NEWSESSION_SERVICE, param);
+		
+		//AuthenticUser auser = new AuthenticUser(userName, "h1i1m1");
+		
+		try {
+			HttpGet hGet = new HttpGet(finalURL, auser);
+			if(hGet.getResponseCode() == 200){
+				success = true;
+			}
+			else{
+				success = false;
+			}
+		} catch (IOException e1) {
+			System.out.println("Error in REST call: url:" + finalURL);
+			success = false;
+		}
+		
+		return success;
+		
+		/*HttpURLConnection conn;
 		try{
 			conn = makeAJAXCall_GET(finalURL);
+			
 			if(conn.getResponseCode() == 200){
 				success = true;
 			}
@@ -43,15 +55,32 @@ public class iMathCloud {
 			success = false;
 		}
 		
-		return success;
+		return success;*/
 	}
 	
-	public static String getJobs(String userName){
+	public static String getJobs(AuthenticUser auser){
 		
+		List<String> param = new ArrayList<String> ();
+		param.add(auser.getuserName());
+				
+		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_GETJOBS_SERVICE, param);
 		
-		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_GETJOBS_SERVICE, userName);
+		//AuthenticUser auser = new AuthenticUser(userName, "h1i1m1");
+		String jobs = new String();
+		try {
+			HttpGet hGet = new HttpGet(finalURL, auser);
+			
+			if(hGet.getResponseCode() == 200){
+				jobs = hGet.getResultFromServer();
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-		HttpURLConnection conn;
+		return jobs;
+		
+		/*HttpURLConnection conn;
 		BufferedReader rd  = null;
 	    StringBuilder sb = null;
 	    String line = null;
@@ -79,46 +108,39 @@ public class iMathCloud {
 			
 		}
 		
-		return jobs;
+		return jobs;*/
 	}
 	
 	
-	public static boolean uploadFile(String fileName){
+	public static boolean uploadFile(String userName, String fileName, String location){
 		
-		boolean success = true;
+		List<String> param = new ArrayList<String> ();
 		
-		String charset = "UTF-8";
-        File uploadFile = new File(fileName);        
-        String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_UPLOADFILE_SERVICE, "");
- 
-        try {
-            MultipartUtility multipart = new MultipartUtility(finalURL, charset);
-            
-            System.out.println("multipart1");
-            multipart.addHeaderField("User-Agent", "CodeJava");
-            multipart.addHeaderField("Test-Header", "Header-Value");
-            System.out.println("multipart2");
-            multipart.addFormField("destinationDir", "/src");
-            System.out.println("multipart3");            
-            multipart.addFilePart("uploadedFile", uploadFile);
-            System.out.println("multipart4");
-            List<String> response = multipart.finish();
-            System.out.println("multipart5");
-            System.out.println("SERVER REPLIED:");
-             
-            for (String line : response) {
-                System.out.println(line);
-            }
-            success = true;
-        } catch (IOException ex) {
-            System.out.println(ex);
-            success = false;
-        }
+		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_UPLOADFILE_SERVICE, param);
 		
-		return success; 
+		AuthenticUser auser = new AuthenticUser(userName, "h1i1m1");
+		
+		boolean success = false;
+		try{
+			HttpPost hPost = new HttpPost (finalURL, auser);
+			hPost.sendFile(fileName, location);
+			if(hPost.getResponseCode() == 200){
+				System.out.println(hPost.getResultFromServer());
+				success = true;
+			}
+			else{
+				success = false;
+			}
+		}
+		catch(Exception e){
+			System.out.println("Error uploading file");
+			success = false;
+		}
+		
+		return success;
 	}
 	
-    private static HttpURLConnection makeAJAXCall_GET(String finalURL) throws Exception{
+   /* private static HttpURLConnection makeAJAXCall_GET(String finalURL) throws Exception{
     	
     	//Authetication is required
     	Authenticator.setDefault(new Authenticator() {
@@ -153,14 +175,20 @@ public class iMathCloud {
 		con.connect();
 		
 		return con;
-    }
+    }*/
     
-    private static String generateURLforiMathCloud(String rest_service, String params){
+    private static String generateURLforiMathCloud(String rest_service, List<String> params){
+    	
+    	String formatedParams = new String ();
+    	for(int i = 0; i < params.size(); i++){
+    		formatedParams = formatedParams.concat(params.get(i)).concat("/");		
+    	}
+    	
     	String finalURL = Constants.HTTP + 
                 Constants.HOST_IMATHCLOUD +  
                 ":" + Constants.IMATHCLOUD_PORT + 
                 "/" + rest_service +
-                "/" + params;
+                "/" + formatedParams;
         return finalURL;
     }
 	
