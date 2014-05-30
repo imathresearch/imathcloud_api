@@ -5,6 +5,37 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>iMathCloudAPI</name>
+  
+  <repositories>
+	<repository>
+		<id>codehaus</id>
+		<url>http://repository.codehaus.org/org/codehaus</url>
+	</repository>
+  </repositories>
+  <dependencies>        
+    <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>           
+    </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>             
+        </dependency>
+  </dependencies>
+  <dependencyManagement>
+        <dependencies>
+        <dependency>
+	      <groupId>org.codehaus.jackson</groupId>
+	      <artifactId>jackson-core-asl</artifactId>
+	      <version>1.7.3</version>
+	    </dependency>
+	   	<dependency>
+	      <groupId>org.codehaus.jackson</groupId>
+	      <artifactId>jackson-mapper-asl</artifactId>
+	      <version>1.7.3</version>
+	    </dependency>
+	    </dependencies>
+  </dependencyManagement>
   <build>
   	<plugins>
   		<plugin>

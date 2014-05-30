@@ -50,8 +50,15 @@ public class HttpPost extends Http {
 
 		// Use a post method.
 		conn.setRequestMethod("POST");
-
+		
+		// Basic request Property
 		conn.setRequestProperty("Connection", "Keep-Alive");
+		
+		// request Property when you send json
+		//conn.setRequestProperty("Content-Type", "application/json; charset=utf8");
+
+		
+		
 		
 		
 	}
