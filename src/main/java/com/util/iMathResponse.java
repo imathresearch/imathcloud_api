@@ -129,12 +129,32 @@ public class iMathResponse {
 
 		private Long id;
 		private String name;
-		//private Long dir;
-		//private String type;
-		//private String sharingState; //to be changed because in iMathCloud is an enum, which usually is null :S
-		//private String permission;	//to be changed because in iMathCloud is an enum, which usually is null :S
-		//private String userNameOwner;
-		//private String absolutePath;
+		
+		
+		public Long getId(){
+			return this.id;
+		}
+		
+		public String getName(){
+			return this.name;
+		}		
+	
+		public void setId(Long id){
+			this.id = id;
+		}
+		
+		public void setName(String name){
+			this.name = name;
+		}
+	
+	}
+	
+	static public class ContentFile{
+		
+		private Long id;
+		private String name;
+		private String type;
+		private List<String> content;
 		
 		public Long getId(){
 			return this.id;
@@ -144,31 +164,14 @@ public class iMathResponse {
 			return this.name;
 		}
 		
-		/*
-		public Long getDirId(){
-			return this.dir;
-		}
-		
 		public String getType(){
 			return this.type;
 		}
 		
-		public String getSharingState(){
-			return this.sharingState;
+		public List<String> getContent(){
+			return this.content;
 		}
-		
-		public String getPermission(){
-			return this.permission;
-		}
-		
-		public String getUserName(){
-			return this.userNameOwner;
-		}
-		
-		public String getAbsolutePath(){
-			return this.absolutePath;
-		}
-		*/
+	
 		public void setId(Long id){
 			this.id = id;
 		}
@@ -176,30 +179,14 @@ public class iMathResponse {
 		public void setName(String name){
 			this.name = name;
 		}
-		/*
-		public void setDir(Long dir){
-			this.dir = dir;
-		}
 		
 		public void setType(String type){
 			this.type = type;
 		}
 		
-		public void setSharingState(String state){
-			this.sharingState = state;
+		public void setContent(List<String> content){
+			this.content = content;
 		}
 		
-		public void setPermission(String permission){
-			this.permission = permission;
-		}
-		
-		public void setUserName(String name){
-			this.userNameOwner = name;
-		}
-		
-		public void setAbsolutePath(String path){
-			this.absolutePath = path;
-		}
-		*/
 	}
 }

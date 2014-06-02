@@ -15,6 +15,6 @@ public class Constants {
 	static public final String IMATHCLOUD_RUNPYTHONJOB_SERVICE = "iMathCloud/rest/jobpython_service/submitJob";
 	static public final String IMATHCLOUD_GETJOB_SERVICE = "iMathCloud/rest/job_service/getJob";
 	static public final String IMATHCLOUD_GETOUTPUTFILES_SERVICE = "iMathCloud/rest/job_service/getJobOutputFiles";
-	
+	static public final String IMATHCLOUD_GETFILECONTENT_SERVICE = "iMathCloud/rest/file_service/getFileContent";
 	
 }

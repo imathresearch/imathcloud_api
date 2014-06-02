@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.codehaus.jackson.map.DeserializationConfig;
 
+import com.exception.iMathAPIException;
 import com.util.AuthenticUser;
 import com.util.Constants;
 import com.util.HttpGet;
@@ -75,83 +76,91 @@ public class iMathCloud {
 	}
 	
 	
-	public static Long uploadFile(String userName, String fileName, String location){
+	public static Long uploadFile(AuthenticUser auser, String fileName, String location) throws Exception{
 		
 		//1. Create the URL
 		List<String> param = new ArrayList<String> ();		
 		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_UPLOADFILE_SERVICE, param);
-
-		//2. Create the user to be authenticated in the REST call
-		AuthenticUser auser = new AuthenticUser(userName, "h1i1m1");
 		
 		Long idFile = 0L;
 		try{
-			//3. Perform the REST call
+			//2. Perform the REST call
 			HttpPost hPost = new HttpPost (finalURL, auser);
 			hPost.sendFile(fileName, location);
 			
-			//4. Manage the answer of the REST CALL
+			//3. Manage the answer of the REST CALL
 			if(hPost.getResponseCode() == 200){
-				//5. If OK, map the JSON string to an iMathResponse object
+				//4. If OK, map the JSON string to an iMathResponse object
 				ObjectMapper mapper = new ObjectMapper();
 				List<iMathResponse.PublicResponse> response = mapper.readValue(hPost.getResultFromServer(), new TypeReference<List<iMathResponse.PublicResponse>>() { });
-				//6. Get the id of the uploaded file {'resource':'data/idFile'}
+				//5. Get the id of the uploaded file {'resource':'data/idFile'}
 				String resource = response.get(0).getResource();
 				String[] resource_split = resource.split("/");
 				if(!resource_split[1].equals("null")){
 					idFile = Long.parseLong(resource_split[1]);
-				}			
+					return idFile;
+				}
+				else{
+					throw new Exception();
+				}
+			}
+			else{
+				throw new Exception();
 			}
 		}
 		catch(Exception e){
 			System.out.println("Error uploading file");
 			System.out.println(e.getMessage());
+			throw new iMathAPIException(iMathAPIException.API_ERROR.FILE_NOT_FOUND);
 		}
 		
-		return idFile;
+		
 	}
 	
-	public static Long runPythonJob(String userName, Long idFile){
+	public static Long runPythonJob(AuthenticUser auser, Long idFile) throws iMathAPIException{
 		
 		Long idJob = 0L;
 		
 		//1. Create the URL
 		List<String> param = new ArrayList<String> ();
-		param.add(userName);
+		param.add(auser.getuserName());
 		param.add(String.valueOf(idFile));
 		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_RUNPYTHONJOB_SERVICE, param);
 		
-		//2. Create the user to be authenticated in the REST call
-		AuthenticUser auser = new AuthenticUser(userName, "h1i1m1");
-		
 		try{
-			//3. Perform the REST call
+			//2. Perform the REST call
 			HttpPost hPost = new HttpPost (finalURL, auser);
 			
-			//4. Manage the answer of the REST CALL
+			//3. Manage the answer of the REST CALL
 			if(hPost.getResponseCode() == 200){
-				//5. If OK, map the JSON string to an iMathResponse object
+				//4. If OK, map the JSON string to an iMathResponse object
 				ObjectMapper mapper = new ObjectMapper();
 				String results = hPost.getResultFromServer();
 				iMathResponse.PublicResponse response = mapper.readValue(results, iMathResponse.PublicResponse.class);
-				//6. Get the id of the uploaded file {'resource':'data/idFile'}
+				//5. Get the id of the uploaded file {'resource':'data/idFile'}
 				String resource = response.getResource();
 				String[] resource_split = resource.split("/");
 				if(!resource_split[1].equals("null")){
 					idJob = Long.parseLong(resource_split[1]);
-				}			
+					return idJob;
+				}
+				else{
+					throw new Exception();
+				}
+			}
+			else{
+				throw new Exception();
 			}
 		}
 		catch(Exception e){
 			System.out.println("Error submitting python job");
 			System.out.println(e.getMessage());
+			throw new iMathAPIException(iMathAPIException.API_ERROR.FILE_NOT_FOUND);
 		}
-		
-		return idJob;
-		
+				
 	}
 	
-	public static String getJobState(String userName, Long idJob){
+	public static String getJobState(AuthenticUser auser, Long idJob) throws Exception{
 		
 		String state = null;
 		
@@ -161,7 +170,7 @@ public class iMathCloud {
 		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_GETJOB_SERVICE, param);
 		
 		//2. Create the user to be authenticated in the REST call
-		AuthenticUser auser = new AuthenticUser(userName, "h1i1m1");
+		//AuthenticUser auser = new AuthenticUser(userName, "h1i1m1");
 		
 		String job; 
 		try {
@@ -175,16 +184,19 @@ public class iMathCloud {
 				ObjectMapper mapper = new ObjectMapper();
 				iMathResponse.JobDTO response = mapper.readValue(job, iMathResponse.JobDTO.class);
 				state = response.getState();
-				System.out.println("JOB STATE " + state);
-				
+				System.out.println("JOB STATE " + state);	
+				return state;
+			}
+			else{
+				throw new Exception();
 			}
 		} catch (IOException e) {
 			System.out.println("Error getting job " + idJob);
 			System.out.println(e.getMessage());
+			throw new iMathAPIException(iMathAPIException.API_ERROR.JOB_DOES_NOT_EXISTS);
 		}
+				
 		
-		
-		return state;
 	}
  
 	
@@ -226,6 +238,45 @@ public class iMathCloud {
 		return map_outputfiles;
 	}
     
+	public static String getFileContent(String userName, Long idFile){
+		
+		String content = null;
+		
+		//1. Create the URL
+		List<String> param = new ArrayList<String> ();
+		param.add(userName);
+		param.add(String.valueOf(idFile));				
+		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_GETFILECONTENT_SERVICE, param);
+						
+		//2. Create the user to be authenticated in the REST call
+		AuthenticUser auser = new AuthenticUser(userName, "h1i1m1");
+						
+		String file_content = null;
+		try {
+			//3. Perform the REST call
+			HttpGet hGet = new HttpGet(finalURL, auser);
+					
+			//4. Manage the answer of the REST CALL
+			if(hGet.getResponseCode() == 200){
+				file_content = hGet.getResultFromServer();
+				System.out.println("OUTPUTFILES " + file_content);
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				iMathResponse.ContentFile response = mapper.readValue(file_content, iMathResponse.ContentFile.class);
+				System.out.println("Contenido ");
+				for(String s: response.getContent()){
+					System.out.println(s);
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("Error getting the content of file " + idFile);
+			System.out.println(e.getMessage());
+		}
+		
+		return content;
+		
+	}
+	
     private static String generateURLforiMathCloud(String rest_service, List<String> params){
     	
     	String formatedParams = new String ();
