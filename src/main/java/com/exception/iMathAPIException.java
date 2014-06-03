@@ -15,7 +15,8 @@ public class iMathAPIException extends Exception{
 		JOB_DOES_NOT_EXISTS("E0006", "Job id: [0] not found"),
 		NO_AUTHORIZATION ("E0007", "No authorization to access de resource"),
 		JOB_NOT_IN_OK_STATE("E0008", "Job id: [0] is not in the FINISHED OK state"),
-		RECOVER_PROBLEM ("E0009", "Fatal error on erasing file [0]. Not recovered");
+		RECOVER_PROBLEM ("E0009", "Fatal error on erasing file [0]. Not recovered"),
+		INTERNAL_SERVER_ERROR ("E0010", "Internal Server Error");
 		
 		private final String code;
 		private final String message;
