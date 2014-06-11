@@ -44,7 +44,7 @@ public class iMathCloud {
 				success = false;
 			}
 		} catch (IOException e1) {
-			System.out.println("Error in REST call: url:" + finalURL);
+			//System.out.println("Error in REST call: url:" + finalURL);
 			success = false;
 		}
 		
@@ -164,11 +164,11 @@ public class iMathCloud {
 		//3. Manage the answer of the REST CALL
 		if(hGet.getResponseCode() == 200){
 			job = hGet.getResultFromServer();
-			System.out.println("JOB " + job);
+			//System.out.println("JOB " + job);
 			ObjectMapper mapper = new ObjectMapper();
 			iMathResponse.JobDTO response = mapper.readValue(job, iMathResponse.JobDTO.class);
 			state = response.getState();
-			System.out.println("JOB STATE " + state);	
+			//System.out.println("JOB STATE " + state);	
 			return state;
 		}
 		else{
@@ -194,7 +194,7 @@ public class iMathCloud {
 		//3. Manage the answer of the REST CALL
 		if(hGet.getResponseCode() == 200){
 			outputfiles = hGet.getResultFromServer();
-			System.out.println("OUTPUTFILES " + outputfiles);
+			//System.out.println("OUTPUTFILES " + outputfiles);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			List<iMathResponse.FileDTO> response = mapper.readValue(outputfiles, new TypeReference<List<iMathResponse.FileDTO>>(){});
@@ -228,14 +228,13 @@ public class iMathCloud {
 		//3. Manage the answer of the REST CALL
 		if(hGet.getResponseCode() == 200){
 			file_content = hGet.getResultFromServer();
-			System.out.println("OUTPUTFILES " + file_content);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			iMathResponse.ContentFile response = mapper.readValue(file_content, iMathResponse.ContentFile.class);
-			System.out.println("Contenido ");
-			for(String s: response.getContent()){
-				System.out.println(s);
-			}
+			//System.out.println("Contenido ");
+			//for(String s: response.getContent()){
+				//System.out.println(s);
+			//}
 			content = response.getContent();
 			return content;
 		}

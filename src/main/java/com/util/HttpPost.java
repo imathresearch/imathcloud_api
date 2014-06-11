@@ -71,7 +71,7 @@ public class HttpPost extends Http {
 	 * path to local file to upload
 	 * @return int if 0 then all ok else see value and look in code!
 	 */
-	public int sendFile2(String surl, String fileName) {
+	/*public int sendFile2(String surl, String fileName) {
 
 		int rtn = 1;
 
@@ -201,7 +201,7 @@ public class HttpPost extends Http {
 		rtn = 0;
 		return rtn;
 
-	}
+	}*/
 	
 	
 	public void sendFile(String fileName, String location) {
