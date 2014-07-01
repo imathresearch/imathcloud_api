@@ -25,7 +25,7 @@ public abstract class Http {
               sb.append(line + '\n');
         }
         
-        System.out.println(sb.toString());
+        //System.out.println(sb.toString());
         result = sb.toString();
         return result;
 	}

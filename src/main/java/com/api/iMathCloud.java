@@ -245,6 +245,44 @@ public class iMathCloud {
 		
 	}
 	
+	public static boolean stopJob(AuthenticUser auser, Long idJob) throws IOException, iMathAPIException{		
+		
+		boolean success = false;
+		//1. Create the URL
+		List<String> param = new ArrayList<String> ();
+		param.add(String.valueOf(idJob));				
+		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_STOPJOB_SERVICE, param);
+		
+		
+		//2. Perform the REST call
+		HttpGet hGet = new HttpGet(finalURL, auser);
+		
+		
+		//3. Manage the answer of the REST CALL
+		if(hGet.getResponseCode() == 200){
+			//4. If OK, map the JSON string to an iMathResponse object
+			ObjectMapper mapper = new ObjectMapper();
+			String results = hGet.getResultFromServer();
+			System.out.println("Results of stop job " + results);
+			iMathResponse.PublicResponse response = mapper.readValue(results, iMathResponse.PublicResponse.class);
+			//5. Get the id of the uploaded file {'resource':'data/idFile'}
+			int code = response.getCode();
+			
+			if(code == 202){
+				success = true;
+			}
+			else{
+				throw new iMathAPIException(iMathAPIException.API_ERROR.INTERNAL_SERVER_ERROR);
+			}
+			
+		}
+		else{
+			throw new iMathAPIException(iMathAPIException.API_ERROR.JOB_DOES_NOT_EXISTS);
+		}
+		
+		return success;
+	}
+	
     private static String generateURLforiMathCloud(String rest_service, List<String> params){
     	
     	String formatedParams = new String ();

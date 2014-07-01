@@ -56,9 +56,6 @@ public class HttpPost extends Http {
 		
 		// request Property when you send json
 		//conn.setRequestProperty("Content-Type", "application/json; charset=utf8");
-
-		
-		
 		
 		
 	}
