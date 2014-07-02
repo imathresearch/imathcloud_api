@@ -32,9 +32,7 @@ public class iMathCloud {
 		param.add(auser.getuserName());
 		
 		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_NEWSESSION_SERVICE, param);
-		
-		//AuthenticUser auser = new AuthenticUser(userName, "h1i1m1");
-		
+				
 		try {
 			HttpGet hGet = new HttpGet(finalURL, auser);
 			if(hGet.getResponseCode() == 200){
@@ -44,7 +42,6 @@ public class iMathCloud {
 				success = false;
 			}
 		} catch (IOException e1) {
-			//System.out.println("Error in REST call: url:" + finalURL);
 			success = false;
 		}
 		
@@ -59,7 +56,6 @@ public class iMathCloud {
 				
 		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_GETJOBS_SERVICE, param);
 		
-		//AuthenticUser auser = new AuthenticUser(userName, "h1i1m1");
 		String jobs = new String();
 		try {
 			HttpGet hGet = new HttpGet(finalURL, auser);
@@ -68,7 +64,6 @@ public class iMathCloud {
 				jobs = hGet.getResultFromServer();
 			}
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -256,14 +251,12 @@ public class iMathCloud {
 		
 		//2. Perform the REST call
 		HttpGet hGet = new HttpGet(finalURL, auser);
-		
-		
+				
 		//3. Manage the answer of the REST CALL
 		if(hGet.getResponseCode() == 200){
 			//4. If OK, map the JSON string to an iMathResponse object
 			ObjectMapper mapper = new ObjectMapper();
 			String results = hGet.getResultFromServer();
-			System.out.println("Results of stop job " + results);
 			iMathResponse.PublicResponse response = mapper.readValue(results, iMathResponse.PublicResponse.class);
 			//5. Get the id of the uploaded file {'resource':'data/idFile'}
 			int code = response.getCode();
