@@ -1,5 +1,6 @@
 package com.api;
 
+
 import java.util.Map;
 
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -76,6 +77,8 @@ public class iMathCloud {
 		//1. Create the URL
 		List<String> param = new ArrayList<String> ();		
 		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_UPLOADFILE_SERVICE, param);
+		
+		System.out.println("API upload file . Final URL " + finalURL);
 		
 		Long idFile = 0L;
 		
