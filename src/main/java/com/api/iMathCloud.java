@@ -26,7 +26,7 @@ import org.codehaus.jackson.type.TypeReference;
 public class iMathCloud {
 	
 
-	public static boolean requestSession(AuthenticUser auser){
+	public static boolean requestSession(AuthenticUser auser) throws iMathAPIException {
 		boolean success = false;
 		
 		List<String> param = new ArrayList<String> ();
@@ -43,14 +43,14 @@ public class iMathCloud {
 				success = false;
 			}
 		} catch (IOException e1) {
-			success = false;
+			throw new iMathAPIException(iMathAPIException.API_ERROR.INTERNAL_SERVER_ERROR);
 		}
 		
 		return success;
 	
 	}
 	
-	public static String getJobs(AuthenticUser auser){
+	public static String getJobs(AuthenticUser auser)  throws iMathAPIException{
 		
 		List<String> param = new ArrayList<String> ();
 		param.add(auser.getuserName());
@@ -65,7 +65,7 @@ public class iMathCloud {
 				jobs = hGet.getResultFromServer();
 			}
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			throw new iMathAPIException(iMathAPIException.API_ERROR.INTERNAL_SERVER_ERROR);
 		}
 		
 		return jobs;
