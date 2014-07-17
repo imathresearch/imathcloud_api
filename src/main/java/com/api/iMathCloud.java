@@ -113,13 +113,14 @@ public class iMathCloud {
 		
 		//1. Create the URL
 		List<String> param = new ArrayList<String> ();
-		param.add(auser.getuserName());
-		param.add(String.valueOf(idFile));
+		//param.add(auser.getuserName());
+		//param.add(String.valueOf(idFile));
 		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_RUNPYTHONJOB_SERVICE, param);
 		
 		
 		//2. Perform the REST call
 		HttpPost hPost = new HttpPost (finalURL, auser);
+		hPost.sendJob(idFile);
 		
 		//3. Manage the answer of the REST CALL
 		if(hPost.getResponseCode() == 200){

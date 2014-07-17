@@ -16,7 +16,11 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import com.util.MapUtils;
 
 
 public class HttpPost extends Http {
@@ -64,7 +68,6 @@ public class HttpPost extends Http {
 			
 	}
 		
-
 	
 	public void sendFile(String fileName, String location) {
 		
@@ -135,7 +138,31 @@ public class HttpPost extends Http {
 			System.out.println("From CLIENT REQUEST:" + ioe);
 		}
 
-}
+	}
+	
+	public void sendJob(Long idFile){
+				
+		try{
+			
+			MapUtils.MyMap<String,List<Long>> m = new MapUtils.MyMap<String,List<Long>>();
+			List<Long> list_jobs = new ArrayList<Long>();
+			list_jobs.add(idFile);
+			List<Long> list_empty = new ArrayList<Long>();
+			m.setValue("dataFiles", list_empty);
+			m.setValue("execFiles", list_jobs);
+			m.setValue("params", list_empty);
+			String jsonMap = m.createJsonString();
+			
+			conn.setRequestProperty("Content-Type", "application/json; charset=utf8");
+			OutputStream os = conn.getOutputStream();
+			os.write(jsonMap.getBytes("UTF-8"));
+			os.close();
+		}
+		catch(IOException ioe){
+			System.out.println("From CLIENT REQUEST:" + ioe);
+		}
+		
+	}
 
 
 }
