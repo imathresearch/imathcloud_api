@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -278,6 +280,25 @@ public class iMathCloud {
 		}
 		
 		return success;
+	}
+	
+	public static void registerUser(String userName, String password, String email) throws IOException, iMathAPIException{
+		
+		boolean success = false;
+		//1. Create the URL
+		List<String> param = new ArrayList<String> ();
+		param.add(String.valueOf(userName));				
+		String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_REGISTERUSER_SERVICE, param);
+		
+		//2. Perform the REST call
+		HttpPost hPost = new HttpPost (finalURL);
+		hPost.sendUserData(password,email);
+		
+		//3. Manage the answer of the REST CALL
+		if(hPost.getResponseCode() != 200){ //OK
+			throw new iMathAPIException(iMathAPIException.API_ERROR.INTERNAL_SERVER_ERROR);
+		}
+				
 	}
 	
     private static String generateURLforiMathCloud(String rest_service, List<String> params){

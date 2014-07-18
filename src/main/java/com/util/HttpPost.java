@@ -67,6 +67,45 @@ public class HttpPost extends Http {
 		//conn.setRequestProperty("Content-Type", "application/json; charset=utf8");
 			
 	}
+	
+	/**
+	 * Constructor
+	 * @throws IOException 
+	 **/
+	public HttpPost (String finalUrl) throws IOException{
+		
+		//Authetication is required
+		/*
+		Authenticator.setDefault(new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(auser.getuserName(), auser.getsecretKey().toCharArray());
+			}
+		});*/
+		
+		URL url = new URL(finalUrl);
+		
+		// Open a HTTP connection to the URL
+		conn = (HttpURLConnection) url.openConnection();
+
+		// Allow Inputs
+		conn.setDoInput(true);
+
+		// Allow Outputs
+		conn.setDoOutput(true);
+
+		// Don't use a cached copy.
+		conn.setUseCaches(false);
+
+		// Use a post method.
+		conn.setRequestMethod("POST");
+		
+		// Basic request Property
+		conn.setRequestProperty("Connection", "Keep-Alive");
+		
+		// request Property when you send json
+		//conn.setRequestProperty("Content-Type", "application/json; charset=utf8");
+			
+	}
 		
 	
 	public void sendFile(String fileName, String location) {
@@ -161,6 +200,33 @@ public class HttpPost extends Http {
 		catch(IOException ioe){
 			System.out.println("From CLIENT REQUEST:" + ioe);
 		}
+		
+	}
+	
+	public void sendUserData(String password, String email){
+		
+		try{
+			
+			MapUtils.MyMap<String,String> m = new MapUtils.MyMap<String,String>();
+			String empty_string = null;
+			m.setValue("password", password);
+			m.setValue("eMail", email);
+			m.setValue("firstName", empty_string);
+			m.setValue("lastName", empty_string);
+			m.setValue("organization", empty_string);
+			m.setValue("phone1", empty_string);
+			m.setValue("phone2", empty_string);
+			String jsonMap = m.createJsonString();
+			
+			conn.setRequestProperty("Content-Type", "application/json; charset=utf8");
+			OutputStream os = conn.getOutputStream();
+			os.write(jsonMap.getBytes("UTF-8"));
+			os.close();
+		}
+		catch(IOException ioe){
+			System.out.println("From CLIENT REQUEST:" + ioe);
+		}
+		
 		
 	}
 
