@@ -27,7 +27,18 @@ import org.codehaus.jackson.type.TypeReference;
 
 public class iMathCloud {
 	
-
+	// If baseURL is null the constants HTTP, HOST_IMATHCLOUD and IMATHCLOUD_PORT will be user
+	// to build the base URL. If not, baseURL will be used instead.
+	private static String baseURL = null;
+	
+	public static void setBaseURL(String base) {
+		baseURL = base;
+	}
+	
+	public static String getBaseURL() {
+		return baseURL;
+	}
+	
 	public static boolean requestSession(AuthenticUser auser) throws iMathAPIException {
 		boolean success = false;
 		
@@ -307,12 +318,16 @@ public class iMathCloud {
     	for(int i = 0; i < params.size(); i++){
     		formatedParams = formatedParams.concat(params.get(i)).concat("/");		
     	}
+    	String finalURL = 	"/" + rest_service +
+    						"/" + formatedParams;
     	
-    	String finalURL = Constants.HTTP + 
+    	if (baseURL == null) {
+    		finalURL = Constants.HTTP + 
                 Constants.HOST_IMATHCLOUD +  
-                ":" + Constants.IMATHCLOUD_PORT + 
-                "/" + rest_service +
-                "/" + formatedParams;
+                ":" + Constants.IMATHCLOUD_PORT + finalURL; 
+    	} else {
+    		finalURL = baseURL + finalURL;
+    	}
         return finalURL;
     }
     
