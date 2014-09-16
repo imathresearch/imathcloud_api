@@ -203,7 +203,7 @@ public class HttpPost extends Http {
 		
 	}
 	
-	public void sendUserData(String password, String email){
+	public void sendUserData(String password, String rootName, String email){
 		
 		try{
 			
@@ -216,6 +216,7 @@ public class HttpPost extends Http {
 			m.setValue("organization", empty_string);
 			m.setValue("phone1", empty_string);
 			m.setValue("phone2", empty_string);
+			m.setValue("rootName", rootName);
 			String jsonMap = m.createJsonString();
 			
 			conn.setRequestProperty("Content-Type", "application/json; charset=utf8");

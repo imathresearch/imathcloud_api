@@ -293,7 +293,7 @@ public class iMathCloud {
 		return success;
 	}
 	
-	public static void registerUser(String userName, String password, String email) throws IOException, iMathAPIException{
+	public static void registerUser(String userName, String password, String rootName, String email) throws IOException, iMathAPIException{
 		
 		boolean success = false;
 		//1. Create the URL
@@ -303,7 +303,7 @@ public class iMathCloud {
 		
 		//2. Perform the REST call
 		HttpPost hPost = new HttpPost (finalURL);
-		hPost.sendUserData(password,email);
+		hPost.sendUserData(password, rootName, email);
 		
 		//3. Manage the answer of the REST CALL
 		if(hPost.getResponseCode() != 200){ //OK
