@@ -19,4 +19,5 @@ public class Constants {
 	static public final String IMATHCLOUD_GETFILECONTENT_SERVICE = "iMathCloud/rest/file_service/getFileContent";
 	static public final String IMATHCLOUD_STOPJOB_SERVICE = "iMathCloud/rest/beta/api/exec/stop";
 	static public final String IMATHCLOUD_REGISTERUSER_SERVICE = "iMathCloud/rest/beta/api/user/newUser";
+	static public final String IMATHCLOUD_REMOVEUSER_SERVICE = "iMathCloud/rest/beta/api/user/removeUser";
 }

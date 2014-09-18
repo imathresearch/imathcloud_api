@@ -295,7 +295,6 @@ public class iMathCloud {
 	
 	public static void registerUser(String userName, String password, String rootName, String email) throws IOException, iMathAPIException{
 		
-		boolean success = false;
 		//1. Create the URL
 		List<String> param = new ArrayList<String> ();
 		param.add(String.valueOf(userName));				
@@ -311,6 +310,22 @@ public class iMathCloud {
 		}
 				
 	}
+	
+	public static void removeUser(AuthenticUser auser) throws IOException, iMathAPIException {
+        //1. Create the URL
+        List<String> param = new ArrayList<String> ();
+        param.add(String.valueOf(auser.getuserName()));                
+        String finalURL = generateURLforiMathCloud(Constants.IMATHCLOUD_REMOVEUSER_SERVICE, param);
+        
+        //2. Perform the REST call
+        HttpPost hPost = new HttpPost (finalURL, auser);
+        
+        //3. Manage the answer of the REST CALL
+        if(hPost.getResponseCode() != 200){ //OK
+            throw new iMathAPIException(iMathAPIException.API_ERROR.INTERNAL_SERVER_ERROR);
+        }
+	}
+	
 	
     private static String generateURLforiMathCloud(String rest_service, List<String> params){
     	
