@@ -19,6 +19,7 @@ import java.util.List;
 
 
 
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -30,7 +31,8 @@ public class iMathCloud {
 	// If baseURL is null the constants HTTP, HOST_IMATHCLOUD and IMATHCLOUD_PORT will be user
 	// to build the base URL. If not, baseURL will be used instead.
 	private static String baseURL = null;
-	
+    private static Object lock = new Object();     // A mutex to sync
+    
 	public static void setBaseURL(String base) {
 		baseURL = base;
 	}
@@ -309,6 +311,27 @@ public class iMathCloud {
 			throw new iMathAPIException(iMathAPIException.API_ERROR.INTERNAL_SERVER_ERROR);
 		}
 				
+	}
+	
+	// Sync method to be called from iMathConnect
+	// This prevents two threads changing the base URL 
+	public static void registerUserSync(String userName, String password, String rootName, String email, String baseURL) throws IOException, iMathAPIException{
+	    synchronized(lock) {
+	        String currBaseURL = iMathCloud.getBaseURL();
+	        iMathCloud.setBaseURL(baseURL);
+	        iMathCloud.registerUser(userName, password, rootName, email);
+	        iMathCloud.setBaseURL(currBaseURL);
+	    }
+	}
+	
+	// Sync method to be called from iMathConnect
+	public static void removeUserSync(AuthenticUser auser, String baseURL) throws IOException, iMathAPIException{
+	    synchronized(lock) {
+	        String currBaseURL = iMathCloud.getBaseURL();
+	        iMathCloud.setBaseURL(baseURL);
+	        iMathCloud.removeUser(auser);
+	        iMathCloud.setBaseURL(currBaseURL);
+	    }
 	}
 	
 	public static void removeUser(AuthenticUser auser) throws IOException, iMathAPIException {
